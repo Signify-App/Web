@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Signify Web</title>
+        <link rel="icon" href="https://drive.google.com/uc?export=download&id=1HLCQV5oIn2SD6jaBQSLa8LF25T6l15bS" />
       </Head>
     
     <Sidebar/>
