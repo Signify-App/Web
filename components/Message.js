@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../fireabase';
 import moment from 'moment';
+import Head from "next/head";
 
 function Message({user,message}) {
     const [userLoggedIn] = useAuthState(auth);
@@ -10,6 +11,9 @@ function Message({user,message}) {
 
     return (
         <Container>
+            <Head>
+            <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet"></link>
+            </Head>
             <TypeOfMessage>
                 {message.message}
                 <TypeofTimeStamp>
@@ -28,6 +32,7 @@ const Container = styled.div`
 
 const MessageElement = styled.p`
     width: fit-content;
+    max-width: 75%;
     padding: 10px;
     border-radius: 8px;
     margin: 5px;
@@ -35,6 +40,11 @@ const MessageElement = styled.p`
     padding-bottom: 26px;
     position: relative;
     text-align: right;
+    font-size: 14px;
+    font-family: 'Comfortaa', cursive;
+    letter-spacing: 0.1px;
+    word-spacing: 0.2px;
+    line-height: 1.5;
 `;
 
 const Sender = styled(MessageElement)`
