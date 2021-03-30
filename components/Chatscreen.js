@@ -7,13 +7,15 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import {useCollection} from 'react-firebase-hooks/firestore';
 import Message from './Message';
-import {useState} from 'react';
+import {useState,useRef} from 'react';
 import firebase from 'firebase';
 import getRecipientEmail from '../utils/getRecipientEmail';
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
+import MicNoneIcon from '@material-ui/icons/MicNone';
+import TimeAgo from 'timeago-react'
 
-function Chatscreen({chat,messages}) {
-
-
+function Chatscreen({chat, messages, recipientSnapshot, recipient}) {
+    const endOfMessageRef = useRef(null);
     const [user] = useAuthState(auth);
     const router = useRouter();
     const [input, setInput] = useState("");
@@ -25,6 +27,7 @@ function Chatscreen({chat,messages}) {
     );
     
     const showMessages = () => {
+        scrollToBottom();
         if(messagesSnapshot){
             return messagesSnapshot.docs.map(msg => {
                 return <Message  
@@ -45,11 +48,20 @@ function Chatscreen({chat,messages}) {
                     message={msg}
                 />
             })
+        }      
+    }
+
+    const scrollToBottom = () => {
+        if(endOfMessageRef.current){
+            endOfMessageRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
         }
-        
     }
 
     const sendMessage = (e) => {
+        
         e.preventDefault();
 
         db.collection('users').doc(user.id).set({
@@ -64,16 +76,33 @@ function Chatscreen({chat,messages}) {
         });
 
         setInput("");
+        scrollToBottom();
     }
-
+    
     const recipientEmail = getRecipientEmail(chat.users,user);
     return (
         <Container>
             <Header>
-                <Avatar/>
+                {recipient ? (
+                    <Avatar src={recipient?.photoURL} /> 
+                ) : (
+                    <Avatar>{recipientEmail[0]}</Avatar> 
+                )}
                     <HeaderInformation>
-                        <h3>{recipientEmail}</h3>
-                        <p>Kast seeb...</p>
+                    {recipient ? (
+                        <TitleUser>{recipient?.name}</TitleUser>
+                    ) : (
+                        <TitleUser>{recipientEmail}</TitleUser>
+                    )}
+                    {recipientSnapshot ? (
+                        <Lastseen>Last active: {' '}
+                            {recipient?.lastSeen.toDate() ? (
+                                <TimeAgo datetime={recipient?.lastSeen.toDate()} />
+                            ) : "Unavailable"}
+                        </Lastseen>
+                    ) : (
+                        <Lastseen>Loading...</Lastseen>
+                    )}
                     </HeaderInformation>
 
                     <HeaderIcon>
@@ -89,14 +118,23 @@ function Chatscreen({chat,messages}) {
 
             <MessageContainer>
                 {showMessages()}
-                <EndOfMessage />
+                <EndOfMessage ref={endOfMessageRef} />
             </MessageContainer>
 
             <InputContainer>
-                <Input value={input} onChange={e => setInput(e.target.value)}/>
-                <button hidden disabled={!input} type="submit" onClick={sendMessage}>
+            <IconButton>
+                    <InsertEmoticonIcon />
+            </IconButton>
+
+                <Input placeholder={"Send Message..."} value={input} onChange={e => setInput(e.target.value)}/>
+                <button  hidden disabled={!input} type="submit" onClick={sendMessage}>
                     Send Message
                 </button>
+
+                <IconButton>
+                    <MicNoneIcon />
+                </IconButton>
+
             </InputContainer>
         </Container>
     )
@@ -110,13 +148,14 @@ const Input = styled.input`
     align-items: center;
     padding: 10px;
     border-radius: 10px;
-    border: none;
+    border: 2px solid #0040ff;
     position: sticky;
     background-color: whitesmoke;
     padding: 10px;
     margin-left: 15px;
     margin-right: 15px;
     font-size: 17px;
+    outline: none;
 
 
 `;
@@ -130,25 +169,41 @@ const Header = styled.div`
     top: 0;
     display: flex;
     padding: 11px;
-    height: 80px;
+    height: 70px;
     align-items: center;
-    border-bottom: 1px solid whitesmoke;
+    border-bottom: 3px solid #0040ff;
 `;
 
 const HeaderInformation = styled.div`
 
     margin-left: 15px;
     flex: 1;
-    
-    >h3{
-        margin-bottom: 3px;
+    margin-top: 30px;
+
+    /* >h3{
+        margin-bottom: 1px;
     }
 
     >p{
-        font-size: 14px;
+        font-size: 12px;
         color: gray;
-    }
+        margin-bottom: 50px;
+    } */
 
+`;
+
+const Lastseen = styled.div`
+    margin-bottom: 27px;
+    font-size: 12px;
+    color: gray;
+    font-weight: 400;
+`;
+
+const TitleUser = styled.div`
+    margin-bottom: 1px;
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
 `;
 
 const HeaderIcon = styled.div`
@@ -157,12 +212,12 @@ const HeaderIcon = styled.div`
 
 const MessageContainer = styled.div`
     padding: 30px;
-    background-color: #e5ded8;
+    background-color: whitesmoke;
     min-height: 90vh;
 `;
 
 const EndOfMessage = styled.div`
-
+   
 `;
 
 const InputContainer = styled.form`

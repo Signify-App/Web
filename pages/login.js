@@ -21,9 +21,9 @@ function Login() {
             
 
             <LoginContainer >
-                <Logo src="https://www.dropbox.com/s/pnzd5bdmxcdnts9/chat.png?dl=1" />
+                <Logo src="https://drive.google.com/uc?export=download&id=1BjvhKnnlcSwVD89DYntrElRqZ5TJEV8_" />
                 <Title>Signify</Title>
-                <Button onClick={signIn} variant="outlined">{"Sign in with Google"}</Button>
+                <Button onClick={signIn} variant="outlined" size="small" >{"Sign in with Google"}</Button>
             </LoginContainer>            
         </Container>
     )
@@ -54,13 +54,13 @@ box-shadow: -2px 7px 66px 0px rgba(184,184,184,0.45);
 const Logo = styled.img`
 height: 200px;
 width: 200px;
-margin-bottom: 35px;
+margin-bottom: 45px;
 `;
 
 
 const Title = styled.div`
     font-size: 37px;
-    font-weight: 60;
+    font-weight: 450;
     letter-spacing: 0.2px;
     margin-bottom: 30px;
     color: #00b7f8;
