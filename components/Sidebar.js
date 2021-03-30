@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled , {ThemeProvider} from "styled-components";
 import {Avatar, Button, IconButton,  Menu , MenuItem, Modal} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -10,6 +10,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollection} from 'react-firebase-hooks/firestore'
 import Chat from "./Chat";
 import React , {useState} from 'react';
+
 
 // const useStyles = makeStyles((theme) => ({
 //     paper: {
@@ -119,7 +120,7 @@ function Sidebar() {
                 <SearchIcon />
                 <SearchInput placeholder={"Search in Chats"}/>
             </Search>
-            <SidebarButton onClick={createChat}>{"Start a new Chat"}</SidebarButton>
+            <SidebarButton onClick={createChat}>{"Start new Chat"}</SidebarButton>
             {/* <Button onClick={handleOpenModel}>Default</Button>
             <Modal
                 open={modalOpen}

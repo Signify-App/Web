@@ -5,6 +5,9 @@ import {auth,db} from "../fireabase";
 import Login from "./login"
 import Loading from '../components/Loading';
 import firebase from 'firebase'
+import {isMobile} from 'react-device-detect';
+import MobileView from '../components/Mobile';
+
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth);
 
@@ -20,9 +23,14 @@ function MyApp({ Component, pageProps }) {
   }, [user])
 
   if(loading) return <Loading/>
-  if(!user) return <Login />
 
+  if(isMobile){
+    return <MobileView />
+  }else{
+    if(!user) return <Login />
   return <Component {...pageProps} />
+  }
+  
 }
 
 export default MyApp
